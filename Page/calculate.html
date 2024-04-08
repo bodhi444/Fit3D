@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Garment Fit Analysis</title>
+</head>
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
+<script src="../components/navbar.js"></script>
+<script src="../components/sidebar.js"></script>
+<style>
+    * {
+        margin: 0;
+        font-family: 'Poppins', sans-serif
+    }
+
+    /* table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 85%;
+    border: 5px solid #ddd;
+    margin-left: auto;
+    margin-right: 0;
+  } */
+
+    tr {
+        padding: 10px 5px;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+</style>
+
+<body>
+
+    <nav-bar></nav-bar>
+    <!-- Gapanalysis-->
+    <div class="flex">
+        <side-bar></side-bar>
+        <div class=" w-full ml-60">
+            <h2 class="font-bold text-2xl ml-9 mt-4 mb-2 underline">Minimum distance calculation</h2>
+            <div id="girth-bust" class="canvas-container hidden"></div>
+            <div id="girth-bust" class="canvas-container  hidden"></div>
+            <div class="w-full flex justify-center px-10 py-7">
+                <table
+                    class="w-full rounded shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] px-4 py-5  bg-white">
+                    <tr class="shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]">
+                        <th> CROSS SECTION</th>
+                        <th>AREA</th>
+                        <th>MEASUREMENT</th>
+                        <th>CF</th>
+                        <th>PS [FR]</th>
+                        <th>SS [R]</th>
+                        <th>PS [BR]</th>
+                        <th>CB</th>
+                        <th>PS [BL]</th>
+                        <th>SS [L]</th>
+                        <th>PS [FL]]</th>
+                    </tr>
+                    <tr id="tr-bust">
+                        <td>
+                            <div id="girth-bust" class="canvas-container "></div>
+                        </td>
+                    </tr>
+                    <tr id="tr-waist">
+                        <td>
+                            <div id="girth-waist" class="canvas-container"></div>
+                        </td>
+                    </tr>
+                    <tr id="tr-hip">
+                        <td>
+                            <div id="girth-hip" class="canvas-container"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Include BABYLON.js and loaders from a CDN or your own hosted files -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <!-- Include any other BABYLON.js extensions or loaders you need here -->
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="distance_calculation.js" type="module"></script>
+
+    <!-- Your application script -->
+    <script src="app.js"></script>
+
+
+    </script>
+</body>
+
+</html>

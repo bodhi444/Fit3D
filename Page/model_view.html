@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model view</title>
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+<script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+<script src="https://cdn.babylonjs.com/recast.js"></script>
+<script src="https://cdn.babylonjs.com/ammo.js"></script>
+<script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+<script src="https://cdn.babylonjs.com/cannon.js"></script>
+<script src="https://cdn.babylonjs.com/Oimo.js"></script>
+<script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+<script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+<script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+<script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+<script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+<script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+<script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+<script src="../components/navbar.js"></script>
+<script src="../components/sidebar.js"></script>
+
+<style>
+    html,
+    body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #renderCanvas {
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+    }
+
+    #canvasZone {
+        width: 80%;
+        height: 80%;
+        position: absolute;
+        right: auto;
+    }
+</style>
+
+<body>
+    <nav-bar></nav-bar>
+    <div class=" flex ">
+        <side-bar></side-bar>
+
+
+        <div class="ml-60">
+            <div class="px-6 py-4">
+                <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+                <script>
+                    var canvas = document.getElementById("renderCanvas");
+
+                    var startRenderLoop = function (engine, canvas) {
+                        engine.runRenderLoop(function () {
+                            if (sceneToRender && sceneToRender.activeCamera) {
+                                sceneToRender.render();
+                            }
+                        });
+                    }
+
+                    var engine = null;
+                    var scene = null;
+                    var sceneToRender = null;
+
+                    var createDefaultEngine = function () {
+                        return new BABYLON.Engine(canvas, true, {
+                            preserveDrawingBuffer: true,
+                            stencil: true,
+                            disableWebGL2Support: false
+                        });
+                    }
+
+                        ;
+                    var fileInput1 = document.getElementById("fileInput1");
+                    var fileInput2 = document.getElementById("fileInput2");
+
+                    if (!fileInput1) {
+                        fileInput1 = document.createElement("INPUT");
+                        fileInput1.setAttribute("id", "fileInput1");
+                        fileInput1.setAttribute("type", "file");
+                    }
+
+                    if (!fileInput2) {
+                        fileInput2 = document.createElement("INPUT");
+                        fileInput2.setAttribute("id", "fileInput2");
+                        fileInput2.setAttribute("type", "file");
+                    }
+
+                    var createScene = function () {
+                        // This creates a basic Babylon Scene object (non-mesh)
+                        var scene = new BABYLON.Scene(engine);
+                        // This creates and positions a free camera (non-mesh)
+                        var camera = new BABYLON.ArcRotateCamera("Camera", 0, 2, 200, new BABYLON.Vector3(0, 0, 0), scene);
+                        // This targets the camera to scene origin
+                        camera.setTarget(BABYLON.Vector3.Zero());
+                        // This attaches the camera to the canvas
+                        camera.attachControl(canvas, true);
+                        // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+                        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+                        // Default intensity is 1. Let's dim the light a small amount
+                        light.intensity = 0.7;
+                        // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+                        var ground = BABYLON.Mesh.CreateGround("ground1", 1, 1, 1, scene);
+                        var advTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true);
+                        var btn1 = BABYLON.GUI.Button.CreateSimpleButton('FileUploader1', 'Upload Model 1');
+                        btn1.top = "10px";
+                        btn1.left = "10px";
+                        btn1.width = "100px";
+                        btn1.height = "40px";
+                        btn1.verticalAlignment = 0;
+                        btn1.horizontalAlignment = 0;
+                        btn1.background = "grey";
+                        btn1.thickness = 0.5;
+
+                        btn1.onPointerClickObservable.add(function () {
+                            fileInput1.click();
+                        });
+                        advTexture.addControl(btn1);
+                        var btn2 = BABYLON.GUI.Button.CreateSimpleButton('FileUploader2', 'Upload Model 2');
+                        btn2.top = "10px";
+                        btn2.left = "120px";
+                        btn2.width = "100px";
+                        btn2.height = "40px";
+                        btn2.verticalAlignment = 0;
+                        btn2.horizontalAlignment = 0;
+                        btn2.background = "grey";
+                        btn2.thickness = 0.5;
+
+                        btn2.onPointerClickObservable.add(function () {
+                            fileInput2.click();
+                        });
+                        advTexture.addControl(btn2);
+
+                        fileInput1.onchange = function () {
+                            var file1 = fileInput1.files[0];
+                            if (!file1) return;
+
+                            if (file1.name.indexOf('.gltf') === -1) {
+                                console.log("WRONG FILE EXTENSION");
+                                return;
+                            }
+
+                            var reader1 = new FileReader();
+
+                            reader1.onload = (function (theFile) {
+                                return function (e) {
+
+                                    //File content.
+                                    BABYLON.SceneLoader.ImportMesh(null, "", "data: " + e.target.result, scene, function (meshes, ps, skeletons) {
+                                        if (meshes.length > 0) {
+                                            meshes[0].position.x = -10; // Position the first mesh
+                                        }
+                                    });
+                                }
+
+                                    ;
+                            })(file1);
+                            // Read in the image file as a data URL.
+                            reader1.readAsText(file1);
+                        }
+
+                            ;
+
+                        fileInput2.onchange = function () {
+                            var file2 = fileInput2.files[0];
+                            if (!file2) return;
+
+                            if (file2.name.indexOf('.gltf') === -1) {
+                                console.log("WRONG FILE EXTENSION");
+                                return;
+                            }
+
+                            var reader2 = new FileReader();
+
+                            reader2.onload = (function (theFile) {
+                                return function (e) {
+
+                                    //File content.
+                                    BABYLON.SceneLoader.ImportMesh(null, " ", "data:" + e.target.result, scene, function (meshes, ps, skeletons) {
+                                        if (meshes.length > 0) {
+                                            meshes[0].position.x = 50; // Position the second mesh
+                                        }
+                                    });
+                                }
+
+                                    ;
+                            })(file2);
+                            // Read in the image file as a data URL.
+                            reader2.readAsText(file2);
+                        }
+
+                            ;
+                        return scene;
+                    }
+
+                        ;
+
+                    window.initFunction = async function () {
+                        var asyncEngineCreation = async function () {
+                            try {
+                                return createDefaultEngine();
+                            } catch (e) {
+                                console.log("the available createEngine function failed. Creating the default engine instead");
+                                return createDefaultEngine();
+                            }
+                        }
+
+                        window.engine = await asyncEngineCreation();
+                        if (!engine) throw 'engine should not be null.';
+                        startRenderLoop(engine, canvas);
+                        window.scene = createScene();
+                    }
+
+                        ;
+
+                    initFunction().then(() => {
+                        sceneToRender = scene
+                    });
+
+                    // Resize
+                    window.addEventListener("resize", function () {
+                        engine.resize();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Report</title>
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
+
+<script src="../components/navbar.js"></script>
+<script src="../components/sidebar.js"></script>
+<style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Raleway", sans-serif
+    }
+
+    *,
+    *:before,
+    *:after {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    form {
+        max-width: 300px;
+        padding: 10px 20px;
+        background: #f4f7f8;
+        border-radius: 8px;
+    }
+
+    h1 {
+        margin: 0 0 30px 0;
+        text-align: center;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        font-size: 16px;
+        height: auto;
+        margin: 0;
+        outline: 0;
+        padding: 15px;
+        width: 100%;
+        background-color: #e8eeef;
+        color: #8a97a0;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
+        margin-bottom: 30px;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        margin: 0 4px 8px 0;
+    }
+
+    select {
+        padding: 6px;
+        height: 32px;
+        border-radius: 2px;
+    }
+
+    button {
+        padding: 19px 39px 18px 39px;
+        background-color: #161616;
+        font-size: 18px;
+        text-align: center;
+        font-style: normal;
+        border-radius: 5px;
+        width: 100%;
+        border-width: 1px 1px 3px;
+        margin-bottom: 50px;
+    }
+
+    legend {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    label.light {
+        display: inline;
+    }
+
+    @media screen and (min-width: 480px) {
+        form {
+            max-width: 480px;
+        }
+
+        * table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 5px solid #ddd;
+            margin-left: auto;
+            margin-right: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        */ tr {
+            padding: 10px 5px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        #analysis_table td input {
+            width: 60px;
+        }
+
+        #analysis_table td {
+            text-align: center;
+        }
+    }
+</style>
+
+<body class="relative">
+    <nav-bar></nav-bar>
+    <div class="flex">
+
+        <side-bar></side-bar>
+
+        <div class=" px-9 py-7 ml-60 ">
+            <div class="flex shadow px-6 py-3 gap-4">
+                <div class="w-60">
+                    <form action="index.html" method="post">
+                        <h1><b>FIT ANALYSIS REPORT</b></h1>
+
+                        <fieldset class="flex flex-col">
+
+                            <legend> </legend>
+
+                            <label for="brand">BRAND:</label>
+                            <input type="text" id="brand" name="user_brand">
+
+                            <label for="fit">FIT:</label>
+                            <input type="text" id="fit" name="user_fit">
+
+                            <label for="style">STYLE:</label>
+                            <input type="text" id="style" name="user_style">
+
+                            <label for="style">SIZE:</label>
+                            <input type="text" id="style" name="user_style">
+
+                            <label for="bio">DESCRIPTION:</label>
+                            <textarea id="bio" name="user_bio"></textarea>
+
+                            <label for="style">FABRICS:</label>
+                            <input type="text" id="style" name="user_style">
+
+                            <label>MODEL:</label>
+                            <input type="radio" id="human" value="under_13" name="user_age"><label for="under_13"
+                                class="light">Model</label><br>
+                            <input type="radio" id="dressform" value="over_13" name="user_age"><label for="over_13"
+                                class="light">Dressform</label>
+
+                        </fieldset>
+
+                        <button type="submit">REPORT</button>
+                        <button type="submit">FIT</button>
+                        <button type="submit">POM</button>
+                    </form>
+                </div>
+                <div id="fit calculation" style="overflow-y:auto; overflow-x: auto;">
+
+                    <table id="analysis_table" class="border">
+                        <tr style="background: color #3a3838;">
+                            <th> POM</th>
+                            <th>LEVEL</th>
+                            <th>LANDMARK</th>
+                            <th>REQUIRED MEASUREMENT</th>
+                            <th>TOLERANCE</th>
+                            <th>ACTUAL MEASUREMENT</th>
+                            <th>DIFFERENCE</th>
+                            <th>RESULT</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+</body>
+<script>
+    function calculateDifference(reqid, tolid, actv, diffid, resulid) {
+        var actM = actv;
+        var reqM = parseFloat(document.getElementById(reqid).value);
+        var tol = parseFloat(document.getElementById(tolid).value);
+
+
+        console.log(actv, reqM, tol)
+
+        const tolCheck = () => {
+            if (tol > (reqM - actM)) {
+                return true
+            } else return false
+        }
+        console.log(tolCheck())
+
+        document.getElementById(diffid).innerText = parseFloat((reqM - actM).toFixed(2))
+        document.getElementById(resulid).innerText = tolCheck() ? "Pass" : "Fail";
+        document.getElementById(resulid).style.color = tolCheck() ? "green" : "red"
+    }
+</script>
+
+<script src="analys.js" type="module"></script>
+
+</html>
